@@ -1,0 +1,45 @@
+.btn-primary {
+    background-color: #0074CC;
+    background-image: -moz-linear-gradient(center top , #0088CC, #0055CC);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.btn-primary:hover {
+    background-color: #0055cc;
+}
+.btn-info {
+    background-color: #49AFCD;
+    background-image: -moz-linear-gradient(center top , #5BC0DE, #2F96B4);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.btn-info:hover {
+    background-color: #2f96b4;
+}
+.well {
+    padding: 10px 10px 0px 10px;
+}
+h2 {
+    margin-bottom: 10px;
+}
+.form-actions {
+    margin-bottom: 0px;
+}
+.label-warning, .badge-warning {
+    background-color: #F89406;
+}
+.label-info, .badge-info {
+    background-color: #3A87AD;
+}
+.nav-list > .active > a {
+    border-radius: 2px;
+}
+div.product-desc {
+    height:35px;line-height:15px;margin-top:5px;overflow:hidden;opacity:0.5;
+}
+
+@media (min-width: 979px) {
+    body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+    }
+}
