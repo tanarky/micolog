@@ -657,7 +657,7 @@ def getZipHandler(**args):
 def main():
     webapp.template.register_template_library('app.filter')
     webapp.template.register_template_library('app.recurse')
-    urls=	[('/media/([^/]*)/{0,1}.*',getMedia),
+    urls = [('/media/([^/]*)/{0,1}.*',getMedia),
             ('/checkimg/', CheckImg),
             ('/checkcode/', CheckCode),
             ('/skin',ChangeTheme),
@@ -684,3 +684,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
