@@ -59,7 +59,7 @@ return true;
 <input type="text" name="checkret" id="checkret" value="" size="5" tabindex="5" />
 </p>
 {%endifequal%}
-{%ifequal blog.comment_check_type 2%}
+
 <div id="checkarea" style="padding-bottom:15px">
 
 <div style="float:left;margin-right:8px;"><label for="checkret"><small>Checkcode:</small></label>
@@ -67,6 +67,7 @@ return true;
 </div>
 <img id='checkimg' src='/checkimg/' style="border:0px;padding:0px;" title='Click to change image' onclick="reloadCheckImage();"/>
 </div>
+{%ifequal blog.comment_check_type 2%}
 {%endifequal%}
 
 <p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="6"></textarea></p>
@@ -77,48 +78,48 @@ return true;
 </form>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 <script>
-    commentuser=$.cookie('comment_user');
-       if (commentuser)
-       {
-        //[user,email,url]=commentuser.split('#@#');
-        var tuple=commentuser.split('#@#');
-        var user,email,url;
-        user=tuple[0];
-        email=tuple[1];
-        url=tuple[2];
-        $('#author').val(user);
-        $('#email').val(email);
-        $('#url').val(url);
-       }
+commentuser=$.cookie('comment_user');
+if (commentuser)
+{
+    //[user,email,url]=commentuser.split('#@#');
+    var tuple=commentuser.split('#@#');
+    var user,email,url;
+    user=tuple[0];
+    email=tuple[1];
+    url=tuple[2];
+    $('#author').val(user);
+    $('#email').val(email);
+    $('#url').val(url);
+}
 
-  $('#commentform').submit(function(){
-         var form = this;
-           if (form.author)
-  		   {
+$('#commentform').submit(function(){
+    var form = this;
+    if (form.author)
+    {
 
-      			 if (!form.author.value)
-          		 {
-          		  alert('Please input your name.');
-          		  form.author.focus();
-          		  return false;
-          		 }
-          		 if (!form.email.value)
-          		 {
-          		 	alert('Please input the email address.');
-          		 	form.email.focus();
-          		 	return false;
-          		 }
-	       }
+      	if (!form.author.value)
+        {
+            alert('Please input your name.');
+            form.author.focus();
+            return false;
+        }
+        if (!form.email.value)
+        {
+            alert('Please input the email address.');
+            form.email.focus();
+            return false;
+        }
+    }
 
-      		 if (!form.comment.value)
-      		 {
-      		 	alert('Please leave some reply message.');
-      		 	form.comment.focus();
-      		 	return false;
-      		 }
+    if (!form.comment.value)
+    {
+      	alert('Please leave some reply message.');
+      	form.comment.focus();
+      	return false;
+    }
 
-      		 return true;
-  });
+    return true;
+});
 </script>
 
 {% else %}

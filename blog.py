@@ -23,7 +23,10 @@ from django.utils.translation import ugettext as _
 ##from django.conf import settings
 ##settings._target = None
 ##activate(g_blog.language)
-from google.appengine.ext import zipserve
+#from google.appengine.ext import zipserve
+#from google.appengine.ext import webapp
+
+import webapp2
 
 def doRequestHandle(old_handler,new_handler,**args):
         new_handler.initialize(old_handler.request,old_handler.response)
@@ -145,7 +148,7 @@ class entriesByCategory(BasePublicPage):
         else:
             self.error(404,slug)
 
-class archive_by_month(BasePublicPage):
+class archiveByMonth(BasePublicPage):
     @cache()
     def get(self,year,month):
         try:
@@ -180,12 +183,20 @@ class entriesByTag(BasePublicPage):
         self.render('tag',{'entries':entries,'tag':slug,'pager':links})
 
 class SinglePost(BasePublicPage):
+    def paramint(self, name, default=0):
+        try:
+           return int(self.request.get(name))
+        except:
+           return default
+
     def head(self,slug=None,postid=None):
         if g_blog.allow_pingback :
             self.response.headers['X-Pingback']="%s/rpc"%str(g_blog.baseurl)
 
     @cache()
     def get(self,slug=None,postid=None):
+        #logging.error('postid = %s, slug = %s' % (postid, slug))
+
         if postid:
             entries = Entry.all().filter("published =", True).filter('post_id =', postid).fetch(1)
         else:
@@ -359,6 +370,32 @@ class SinglePost(BasePublicPage):
         else:
             return "/"+url+"?mp="+str(pindex)+"#comments"
 
+class SinglePost2(SinglePost):
+    def head(self, postid=None, attr=None):
+        return super(SinglePost2, self).head(slug=None, postid=int(postid))
+
+    @cache()
+    def get(self, postid=None, attr=None):
+        if not attr or attr == "" or not attr.startswith("/"):
+            return self.redirect("/?p=%s" % postid)
+        return super(SinglePost2, self).get(slug=None, postid=int(postid))
+
+    def post(self, postid=None, attr=None):
+        return super(SinglePost2, self).post(slug=None, postid=int(postid))
+
+
+class SinglePage(SinglePost):
+    def head(self, slug=None):
+        return super(SinglePage, self).head(slug=slug, postid=None)
+
+    @cache()
+    def get(self, slug=None):
+        return super(SinglePage, self).get(slug=slug, postid=None)
+
+    def post(self, slug=None):
+        return super(SinglePage, self).post(slug=slug, postid=None)
+
+
 class FeedHandler(BaseRequestHandler):
     @cache(time=600)
     def get(self,tags=None):
@@ -422,11 +459,11 @@ class SitemapHandler(BaseRequestHandler):
 
 
 class Error404(BaseRequestHandler):
-    @cache(time=36000)
-    def get(self,slug=None):
-        self.error(404)
+   @cache(time=36000)
+   def get(self,slug=None):
+       self.error(404)
 
-class Post_comment(BaseRequestHandler):
+class PostComment(BaseRequestHandler):
     #@printinfo
     def post(self,slug=None):
         useajax=self.param('useajax')=='1'
@@ -441,7 +478,10 @@ class Post_comment(BaseRequestHandler):
         reply_notify_mail=self.parambool('reply_notify_mail')
 
         sess=Session(self,timeout=180)
-        if not self.is_login:
+
+        # ログインにかかわらず常にチェック
+        #if not self.is_login:
+        if True:
             #if not (self.request.cookies.get('comment_user', '')):
             try:
                 check_ret=True
@@ -534,9 +574,8 @@ class ChangeTheme(BaseRequestHandler):
        self.redirect('/')
 
 
-class do_action(BaseRequestHandler):
+class doAction(BaseRequestHandler):
     def get(self,slug=None):
-
         try:
             func=getattr(self,'action_'+slug)
             if func and callable(func):
@@ -598,22 +637,6 @@ class do_action(BaseRequestHandler):
         self.write(settings.LANGUAGE_CODE)
         self.write(_("this is a test"))
 
-
-class getMedia(webapp.RequestHandler):
-    def get(self,slug):
-        media=Media.get(slug)
-        if media:
-            self.response.headers['Expires'] = 'Thu, 15 Apr 3010 20:00:00 GMT'
-            self.response.headers['Cache-Control'] = 'max-age=3600,public'
-            self.response.headers['Content-Type'] = str(media.mtype)
-            self.response.out.write(media.bits)
-            a=self.request.get('a')
-            if a and a.lower()=='download':
-                media.download+=1
-                media.put()
-
-
-
 class CheckImg(BaseRequestHandler):
     def get(self):
         img = Image()
@@ -627,60 +650,76 @@ class CheckImg(BaseRequestHandler):
         self.response.headers['Content-Type'] = "image/png"
         self.response.out.write(imgdata)
 
-
-class CheckCode(BaseRequestHandler):
-    def get(self):
-        sess=Session(self,timeout=900)
-        num1=random.randint(30,50)
-        num2=random.randint(1,10)
-        code="<span style='font-size:12px;color:red'>%d - %d =</span>"%(num1,num2)
-        sess['code']=num1-num2
-        sess.save()
-        #self.response.headers['Content-Type'] = "text/html"
-        self.response.out.write(code)
-
-class Other(BaseRequestHandler):
-    def get(self,slug=None):
-        if not g_blog.tigger_urlmap(slug,page=self):
-            self.error(404)
-
-    def post(self,slug=None):
-        content=g_blog.tigger_urlmap(slug,page=self)
-        if content:
-            self.write(content)
-        else:
-            self.error(404)
-
-def getZipHandler(**args):
-    return ('/xheditor/(.*)',zipserve.make_zip_handler('''D:\\Projects\\eric-guo\\plugins\\xheditor\\xheditor.zip'''))
+#class getMedia(webapp.RequestHandler):
+#    def get(self,slug):
+#        media=Media.get(slug)
+#        if media:
+#            self.response.headers['Expires'] = 'Thu, 15 Apr 3010 20:00:00 GMT'
+#            self.response.headers['Cache-Control'] = 'max-age=3600,public'
+#            self.response.headers['Content-Type'] = str(media.mtype)
+#            self.response.out.write(media.bits)
+#            a=self.request.get('a')
+#            if a and a.lower()=='download':
+#                media.download+=1
+#                media.put()
+#
+#class CheckCode(BaseRequestHandler):
+#    def get(self):
+#        sess=Session(self,timeout=900)
+#        num1=random.randint(30,50)
+#        num2=random.randint(1,10)
+#        code="<span style='font-size:12px;color:red'>%d - %d =</span>"%(num1,num2)
+#        sess['code']=num1-num2
+#        sess.save()
+#        #self.response.headers['Content-Type'] = "text/html"
+#        self.response.out.write(code)
+#
+#class Other(BaseRequestHandler):
+#    def get(self,slug=None):
+#        if not g_blog.tigger_urlmap(slug,page=self):
+#            self.error(404)
+#
+#    def post(self,slug=None):
+#        content=g_blog.tigger_urlmap(slug,page=self)
+#        if content:
+#            self.write(content)
+#        else:
+#            self.error(404)
+#
+#def getZipHandler(**args):
+#    return ('/xheditor/(.*)',zipserve.make_zip_handler('''D:\\Projects\\eric-guo\\plugins\\xheditor\\xheditor.zip'''))
 
 def main():
     webapp.template.register_template_library('app.filter')
     webapp.template.register_template_library('app.recurse')
-    urls = [('/media/([^/]*)/{0,1}.*',getMedia),
-            ('/checkimg/', CheckImg),
-            ('/checkcode/', CheckCode),
-            ('/skin',ChangeTheme),
-            ('/feed', FeedHandler),
-            ('/feed/comments',CommentsFeedHandler),
-            ('/sitemap', SitemapHandler),
-            ('/sitemap\.xml', SitemapHandler),
-            ('/post_comment',Post_comment),
-            ('/page/(?P<page>\d+)', MainPage),
-            ('/category/(.*)',entriesByCategory),
-            ('/(\d{4})/(\d{1,2})',archive_by_month),
-            ('/tag/(.*)',entriesByTag),
-            #('/\?p=(?P<postid>\d+)',SinglePost),
-            ('/', MainPage),
-            ('/do/(\w+)', do_action),
-            ('/e/(.*)',Other),
-            ('/([\\w\\-\\./%]+)', SinglePost),
+    urls = [
+            ('/\d{4}/\d{1,2}/(\d+)(.*)', SinglePost2),   # /2012/10/ID/SLUG
+            ('/page/(.*)',               SinglePage),    # /page/SLUG
+            ('/tag/(.*)',                entriesByTag),
+            ('/category/(.*)',           entriesByCategory),
+            ('/(\d{4})/(\d{1,2})',       archiveByMonth),
+            ('/',                        MainPage),
+            ('/checkimg/',               CheckImg),
+            ('/skin',                    ChangeTheme),
+            ('/feed',                    FeedHandler),
+            ('/feed/comments',           CommentsFeedHandler),
+            ('/sitemap\.xml',            SitemapHandler),
+            ('/post_comment',            PostComment),
+            ('/do/(\w+)',                doAction),
             ('.*',Error404),
+
+            ## 削除
+            #('/checkcode/',              CheckCode),
+            #('/media/([^/]*)/{0,1}.*',   getMedia),
+            #('/sitemap',                 SitemapHandler),
+            #('/e/(.*)',                  Other),
+            #('/([\\w\\-\\./%]+)',        SinglePost),  # SinglePost2があれば要らない気がする
             ]
-    application = webapp.WSGIApplication(urls)
-    g_blog.application=application
-    g_blog.plugins.register_handlerlist(application)
-    wsgiref.handlers.CGIHandler().run(application)
+    
+    app = webapp2.WSGIApplication(urls)
+    g_blog.application = app
+    g_blog.plugins.register_handlerlist(app)
+    wsgiref.handlers.CGIHandler().run(app)
 
 if __name__ == "__main__":
     main()
