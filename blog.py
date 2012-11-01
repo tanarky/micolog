@@ -716,10 +716,10 @@ def main():
             #('/([\\w\\-\\./%]+)',        SinglePost),  # SinglePost2があれば要らない気がする
             ]
     
-    app = webapp2.WSGIApplication(urls)
-    g_blog.application = app
-    g_blog.plugins.register_handlerlist(app)
-    wsgiref.handlers.CGIHandler().run(app)
+    application = webapp2.WSGIApplication(urls)
+    g_blog.application = application
+    g_blog.plugins.register_handlerlist(application)
+    wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == "__main__":
     main()

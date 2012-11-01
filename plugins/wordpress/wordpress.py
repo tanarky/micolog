@@ -6,13 +6,10 @@ from model import *
 import logging,math
 from django.utils import simplejson
 from base import BaseRequestHandler,urldecode
-
+from google.appengine.api import users
 
 class waphandler(BaseRequestHandler):
 	def get(self):
-		if not self.is_login:
-			self.redirect(users.create_login_url(self.request.uri))
-
 		action=self.param('action')
 
 		if action=='stop':
@@ -36,10 +33,6 @@ class waphandler(BaseRequestHandler):
 			self.write(simplejson.dumps((-1,"Have no data to import!",False)))
 
 	def post(self):
-		if not self.is_login:
-			self.redirect(users.create_login_url(self.request.uri))
-
-
 		try:
 				#global imt
 				imt=memcache.get("imt")

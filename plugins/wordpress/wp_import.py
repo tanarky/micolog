@@ -1,6 +1,6 @@
 ###Import post,page,category,tag from wordpress export file
 import xml.etree.ElementTree as et
-import logging
+import logging,sys
 ###import from wxr file
 class import_wordpress:
 	def __init__(self,source):
@@ -46,7 +46,9 @@ class import_wordpress:
 			try:
 				entry={}
 				entry['title']=item.findtext('title')
+				#entry['author']=item.findtext('author')
 				logging.info(title)
+				#logging.info(entry['author'])
 				entry['pubDate']=item.findtext('pubDate')
 				entry['post_type']=item.findtext(self.wpns+'post_type')
 				entry['content']= item.findtext(self.contentns+'encoded')
@@ -87,15 +89,18 @@ class import_wordpress:
 						comment_approved=0
 					if comment_approved:
 						comment=dict(author=com.findtext(self.wpns+'comment_author'),
-										content=com.findtext(self.wpns+'comment_content'),
-										email=com.findtext(self.wpns+'comment_author_email'),
-										weburl=com.findtext(self.wpns+'comment_author_url'),
-										date=com.findtext(self.wpns+'comment_date'),
-										ip=com.findtext(self.wpns+'comment_author_IP')
-										)
-					entry['comments'].append(comment)
+                                                             content=com.findtext(self.wpns+'comment_content'),
+                                                             email=com.findtext(self.wpns+'comment_author_email'),
+                                                             weburl=com.findtext(self.wpns+'comment_author_url'),
+                                                             date=com.findtext(self.wpns+'comment_date'),
+                                                             ip=com.findtext(self.wpns+'comment_author_IP')
+                                                             )
+                                        else:
+                                                comment=dict()
+                                        entry['comments'].append(comment)
 				self.entries.append(entry)
 			except:
+                                #logging.error(sys.exc_info())
 				logging.info("parse wordpress file error")
 		self.total=self.count()
 		self.cur_do=("begin","begin")
