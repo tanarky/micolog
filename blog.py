@@ -128,13 +128,10 @@ class MainPage(BasePublicPage):
 class entriesByCategory(BasePublicPage):
     @cache()
     def get(self,slug=None):
-        logging.error("category is RAW:%s" % slug)
 
         if not slug:
             self.error(404)
             return
-
-        logging.error("slug exists.")
 
         try:
             page_index=int(self.param('page'))
@@ -142,7 +139,6 @@ class entriesByCategory(BasePublicPage):
             page_index=1
 
         slug=urldecode(slug)
-        logging.error("category is ORG:%s" % slug)
 
         cats=Category.all().filter('slug =',slug).fetch(1)
         if cats:
