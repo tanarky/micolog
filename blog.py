@@ -46,7 +46,11 @@ class BasePublicPage(BaseRequestHandler):
         archives=Archive.all().order('-year').order('-month').fetch(12)
         alltags=Tag.all()
         self.template_vals.update(
-            dict(menu_pages=m_pages, categories=Category.all(), blogroll=blogroll, archives=archives, alltags=alltags,
+            dict(menu_pages=m_pages,
+                 categories=Category.all(),
+                 blogroll=blogroll,
+                 archives=archives,
+                 alltags=alltags,
                  recent_comments=Comment.all().order('-date').fetch(5)))
 
     def m_list_pages(self):
@@ -106,6 +110,7 @@ class MainPage(BasePublicPage):
     @cache()
     def doget(self,page):
         page=int(page)
+
         entrycount=g_blog.postscount()
         max_page = entrycount / g_blog.posts_per_page + ( entrycount % g_blog.posts_per_page and 1 or 0 )
 
@@ -117,13 +122,18 @@ class MainPage(BasePublicPage):
                 fetch(self.blog.posts_per_page, offset = (page-1) * self.blog.posts_per_page)
 
 
-        show_prev =entries and  (not (page == 1))
-        show_next =entries and  (not (page == max_page))
+        show_prev = entries and  (not (page == 1))
+        show_next = entries and  (not (page == max_page))
         #print page,max_page,g_blog.entrycount,self.blog.posts_per_page
 
         return self.render('index',
-                           dict(entries=entries, show_prev=show_prev, show_next=show_next, pageindex=page, ishome=True,
-                                pagecount=max_page, postscounts=entrycount))
+                           dict(entries=entries,
+                                show_prev=show_prev,
+                                show_next=show_next,
+                                pageindex=page,
+                                ishome=True,
+                                pagecount=max_page,
+                                postscounts=entrycount))
 
 class entriesByCategory(BasePublicPage):
     @cache()
