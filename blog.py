@@ -25,8 +25,7 @@ from django.utils.translation import ugettext as _
 ##activate(g_blog.language)
 #from google.appengine.ext import zipserve
 #from google.appengine.ext import webapp
-
-import webapp2
+#import webapp2
 
 def doRequestHandle(old_handler,new_handler,**args):
         new_handler.initialize(old_handler.request,old_handler.response)
@@ -218,7 +217,7 @@ class SinglePost(BasePublicPage):
         if g_blog.allow_pingback and entry.allow_trackback:
             self.response.headers['X-Pingback']="%s/rpc"%str(g_blog.baseurl)
         entry.readtimes += 1
-        entry.put()
+        #entry.put()
         self.entry=entry
 
 
@@ -722,7 +721,7 @@ def main():
             #('/([\\w\\-\\./%]+)',        SinglePost),  # SinglePost2があれば要らない気がする
             ]
     
-    application = webapp2.WSGIApplication(urls)
+    application = webapp.WSGIApplication(urls)
     g_blog.application = application
     g_blog.plugins.register_handlerlist(application)
     wsgiref.handlers.CGIHandler().run(application)

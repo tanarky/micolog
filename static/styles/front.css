@@ -45,15 +45,15 @@ div.container {
     margin: 20px 0;
 }
 #myhero .mytitle {
-    font-size: 100px;
-    line-height: 77px;
-    margin-left: -5px;
+    font-size: 38px;
+    line-height: 38px;
     text-shadow: 3px 3px 5px #888;
 }
 #myhero .mysubtitle {
-    font-size: 30px;
-    line-height: 38px;
+    font-size: 20px;
+    line-height: 30px;
     color: #888;
+    font-style: Italic;
 }
 
 .breadcrumb {
