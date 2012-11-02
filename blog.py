@@ -129,9 +129,13 @@ class MainPage(BasePublicPage):
 class entriesByCategory(BasePublicPage):
     @cache()
     def get(self,slug=None):
+        logging.error("category is RAW:%s" % slug)
+
         if not slug:
             self.error(404)
             return
+
+        logging.error("slug exists.")
 
         try:
             page_index=int(self.param('page'))
@@ -139,6 +143,7 @@ class entriesByCategory(BasePublicPage):
             page_index=1
 
         slug=urldecode(slug)
+        logging.error("category is ORG:%s" % slug)
 
         cats=Category.all().filter('slug =',slug).fetch(1)
         if cats:
@@ -694,7 +699,8 @@ def main():
     webapp.template.register_template_library('app.recurse')
     urls = [
             ('/\d{4}/\d{1,2}/(\d+)(.*)', SinglePost2),   # /2012/10/ID/SLUG
-            ('/page/(.*)',               SinglePage),    # /page/SLUG
+            ('/custom/(.*)',             SinglePage),    # /custom/SLUG
+            ('/page/(.*)',               MainPage),      # /page/SLUG
             ('/tag/(.*)',                entriesByTag),
             ('/category/(.*)',           entriesByCategory),
             ('/(\d{4})/(\d{1,2})',       archiveByMonth),

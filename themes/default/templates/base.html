@@ -20,18 +20,21 @@
       <div class="row">
         <div class="span12">
           <div class="mycontainer">
-            <div id="myhero">
-              <p class="mytitle">{{ blog.title }}</p>
-              <p class="mysubtitle">{{ blog.subtitle }}</p>
-            </div>
 
             <ul class="breadcrumb">
-              <li class="active"><h1>Data</h1></li>
+              <li class="active"><h1><a href="/"><span class="icon-home"></span> {{ blog.title }} トップページ</a></h1></li>
+<!--
               <span class="divider">&lt;</span>
               <li><h2><a href="#">Home</a></h2></li>
               <span class="divider">&lt;</span>
               <li><h2><a href="#">Library</a></h2></li>
+-->
             </ul>
+
+            <div id="myhero">
+              <p class="mytitle">{{ blog.title }}</p>
+              <p class="mysubtitle">{{ blog.subtitle }}</p>
+            </div>
 
           </div>
         </div>
@@ -52,6 +55,52 @@
       </div>
 
     </div>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script>
+commentuser=$.cookie('comment_user');
+if (commentuser)
+{
+    //[user,email,url]=commentuser.split('#@#');
+    var tuple=commentuser.split('#@#');
+    var user,email,url;
+    user=tuple[0];
+    email=tuple[1];
+    url=tuple[2];
+    $('#author').val(user);
+    $('#email').val(email);
+    $('#url').val(url);
+}
+
+$('#commentform').submit(function(){
+    var form = this;
+    if (form.author)
+    {
+
+      	if (!form.author.value)
+        {
+            alert('Please input your name.');
+            form.author.focus();
+            return false;
+        }
+        if (!form.email.value)
+        {
+            alert('Please input the email address.');
+            form.email.focus();
+            return false;
+        }
+    }
+
+    if (!form.comment.value)
+    {
+      	alert('Please leave some reply message.');
+      	form.comment.focus();
+      	return false;
+    }
+
+    return true;
+});
+</script>
+
   </body>
 </html>

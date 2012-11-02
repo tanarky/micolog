@@ -1,23 +1,15 @@
 <ul class="unstyled">
-  <li>
-    <h3>Recent Comments</h3>
-    <ul>
-      {% for comment in recent_comments %}
+  <li class="mgb10">
+    <h3 class="nav-title">カテゴリ</h3>
+    <ul class="">
+      {%for cate in categories%}
       <li>
-        <a href="/{{comment.entry.link}}#comment-{{comment.key.id}}">{{comment.author}}:{{comment.shortcontent}}...</a>
+	<a href="/category/{{cate.slug|urlencode}}">{{cate.name}}({{cate.count}})</a>
       </li>
       {%endfor%}
     </ul>
   </li>
-
-  <li>
-    <h3>Categories</h3>
-    <ul class="unstyled">
-      {%for cate in categories%}
-      <li>	<a href="/category/{{cate.slug|urlencode}}">{{cate.name}}({{cate.count}})</a></li>
-      {%endfor%}
-    </ul>
-  </li>
+<!--
   <li>
     <h3>Blog roll</h3>
     <ul class="">
@@ -26,13 +18,16 @@
       {%endfor%}
     </ul>
   </li>
+-->
   <li>
-    <h3>Search</h3>
+    <h3 class="nav-title">サイト内検索</h3>
     <form method="get" id="searchform" action="http://www.google.com/search">
       <input type="text" value="" name="as_q" id="s" />
       <input type="submit" value="search" />
       <input name="as_sitesearch" value="{{blog.domain}}" type="hidden"/>
     </form>
   </li>
-  <li><span class="icon-flag"></span> <a href="{{blog.feedurl}}">Feed</a></li>
+  <li>
+    <a href="{{blog.feedurl}}">RSS登録</a>
+  </li>
 </ul>

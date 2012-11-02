@@ -3,26 +3,38 @@
 
 {% if entries %}
 {% for entry in entries %}
-<div class="box">
-  <div id="post-{{entry.key}}">
-    <div class="nifty">
-      <h2><a href="/{{ entry.link }}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
-      <span class="date">{{entry.date|datetz:"F jS, Y"}}</span>
-    </div>
-    <div class="en_body">
-      {{entry.content_excerpt|safe}}
-    </div>
+<h2 class="entry-title"><a href="/{{ entry.link }}" rel="bookmark" title="記事詳細へ: {{entry.title}}">{{entry.title}}</a></h2>
+<p class="entry-pubdate">{{entry.date}}</p>
 
-    <div class="meta">
-      {% if entry.strtags %}
-      <p>Tags: {%for tag in entry.tags%}<a href="/tag/{{tag|urlencode}}">{{tag}}</a> {%endfor%}</p>
-      {%endif%}
-      <p>Posted in {%for cate in entry.categories%} <a href="/category/{{cate.slug}}">{{cate.name}}</a> {%endfor%} |
-        {%if self.is_admin%}<a href="{{entry.edit_url}}">Edit</a> | {%endif%}
-        <a href="/{{entry.link}}#comments">Comments({{entry.commentcount}})&#187;</a>
-    </div>
-  </div>
+<div class="entry-body">
+  {{ entry.content|safe }}
+
+  {%mf after_entry_content%}
+    {%if relateposts%}
+    <br/><br/>
+    <h4 class="nav-title">関連記事:</h4>
+    <ul>
+      {%for post in relateposts%}
+      <li><a href="/{{post.link}}">{{post.title}}</a></li>
+      {%endfor%}
+    </ul>
+    {% endif %}
+  {% endmf %}
 </div>
+<br/><br/>
+<div class="meta">
+  {% if entry.strtags %}
+  <p>Tags: {% for tag in entry.tags %}<a href="/tag/{{tag|urlencode}}">{{tag}}</a> {% endfor %}</p>
+  {% endif %}
+
+  {% if entry.categories %}
+  <p>Posted in {%for cate in entry.categories%} <a href="/category/{{cate.slug}}">{{cate.name}}</a> {% endfor %}
+    {% if self.is_admin %}| <a href="{{entry.edit_url}}">Edit</a>{% endif %}
+  </p>
+  {% endif %}
+</div>
+
+<br/><br/>
 {% endfor %}
 
 <div class="box">
@@ -35,16 +47,11 @@
 </div>
 
 {% else %}
-<div class="ctop"></div>
 <div class="box">
   <h2>Not Found</h2>
   <p>Sorry, but you are looking for something that isn't here.</p>
 </div>
-<div class="clear"></div>
-<div class="cbottom"></div>
-<div class="space"></div>
 {% endif %}
-
 
 {% endblock %}
 
