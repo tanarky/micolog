@@ -96,6 +96,7 @@ class MainPage(BasePublicPage):
                 return self.error(404)
         if g_blog.allow_pingback :
             self.response.headers['X-Pingback']="%s/rpc"%str(g_blog.baseurl)
+
         self.doget(page)
 
     def post(self):
@@ -129,6 +130,7 @@ class MainPage(BasePublicPage):
 
         return self.render('index',
                            dict(entries=entries,
+                                categories=Category.all(),
                                 show_prev=show_prev,
                                 show_next=show_next,
                                 pageindex=page,
