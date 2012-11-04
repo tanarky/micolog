@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 import cgi, os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from google.appengine.dist import use_library
@@ -18,67 +18,68 @@ from base import *
 from model import *
 from django.utils.translation import ugettext as _
 
-##os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-##from django.utils.translation import  activate
-##from django.conf import settings
-##settings._target = None
-##activate(g_blog.language)
-#from google.appengine.ext import zipserve
-#from google.appengine.ext import webapp
-#import webapp2
-
 def doRequestHandle(old_handler,new_handler,**args):
-        new_handler.initialize(old_handler.request,old_handler.response)
-        return  new_handler.get(**args)
+    new_handler.initialize(old_handler.request,old_handler.response)
+    return  new_handler.get(**args)
 
 def doRequestPostHandle(old_handler,new_handler,**args):
-        new_handler.initialize(old_handler.request,old_handler.response)
-        return  new_handler.post(**args)
+    new_handler.initialize(old_handler.request,old_handler.response)
+    return  new_handler.post(**args)
 
 class BasePublicPage(BaseRequestHandler):
     def initialize(self, request, response):
         BaseRequestHandler.initialize(self,request, response)
-        m_pages=Entry.all().filter('entrytype =','page')\
-            .filter('published =',True)\
-            .filter('entry_parent =',0)\
-            .order('menu_order')
-        blogroll=Link.all().filter('linktype =','blogroll')
-        archives=Archive.all().order('-year').order('-month').fetch(12)
-        alltags=Tag.all()
-        self.template_vals.update(
-            dict(menu_pages=m_pages,
-                 categories=Category.all(),
-                 blogroll=blogroll,
-                 archives=archives,
-                 alltags=alltags,
-                 recent_comments=Comment.all().order('-date').fetch(5)))
 
-    def m_list_pages(self):
-        menu_pages=None
-        entry=None
-        if self.template_vals.has_key('menu_pages'):
-            menu_pages= self.template_vals['menu_pages']
-        if self.template_vals.has_key('entry'):
-            entry=self.template_vals['entry']
-        ret=''
-        current=''
-        for page in menu_pages:
-            if entry and entry.entrytype=='page' and entry.key()==page.key():
-                current= 'current_page_item'
-            else:
-                current= 'page_item'
-            #page is external page ,and page.slug is none.
-            if page.is_external_page and not page.slug:
-                ret+='<li class="%s"><a href="%s" target="%s" >%s</a></li>'%( current,page.link,page.target, page.title)
-            else:
-                ret+='<li class="%s"><a href="/%s" target="%s">%s</a></li>'%( current,page.link, page.target,page.title)
-        return ret
+        #m_pages=Entry.all().filter('entrytype =','page')\
+        #    .filter('published =',True)\
+        #    .filter('entry_parent =',0)\
+        #    .order('menu_order')
+        #blogroll=Link.all().filter('linktype =','blogroll')
+        #archives=Archive.all().order('-year').order('-month').fetch(12)
+        #alltags=Tag.all()
+        #cat = Category.all()
+        #logging .info(dict(cat))
+        #self.template_vals.update(
+        #    dict(
+        #        #menu_pages=m_pages,
+        #        #categories=Category.all(),
+        #        #blogroll=blogroll,
+        #        #archives=archives,
+        #        #alltags=alltags,
+        #        #recent_comments=Comment.all().order('-date').fetch(5)))
+        #        menu_pages=[],
+        #        categories=[],
+        #        blogroll=[],
+        #        archives=[],
+        #        alltags=[],
+        #        recent_comments=[]))
 
-    def sticky_entrys(self):
-        return Entry.all().filter('entrytype =','post')\
-            .filter('published =',True)\
-            .filter('sticky =',True)\
-            .order('-date')
+#    def m_list_pages(self):
+#        menu_pages=None
+#        entry=None
+#        if self.template_vals.has_key('menu_pages'):
+#            menu_pages= self.template_vals['menu_pages']
+#        if self.template_vals.has_key('entry'):
+#            entry=self.template_vals['entry']
+#        ret=''
+#        current=''
+#        for page in menu_pages:
+#            if entry and entry.entrytype=='page' and entry.key()==page.key():
+#                current= 'current_page_item'
+#            else:
+#                current= 'page_item'
+#            #page is external page ,and page.slug is none.
+#            if page.is_external_page and not page.slug:
+#                ret+='<li class="%s"><a href="%s" target="%s" >%s</a></li>' % ( current,
+#                                                                                page.link,
+#                                                                                page.target,
+#                                                                                page.title)
+#            else:
+#                ret+='<li class="%s"><a href="/%s" target="%s">%s</a></li>'%( current,
+#                                                                              page.link,
+#                                                                              page.target,
+#                                                                              page.title)
+#        return ret
 
 class MainPage(BasePublicPage):
     def head(self,page=1):
@@ -143,6 +144,8 @@ class entriesByCategory(BasePublicPage):
             self.error(404)
             return
 
+        self.template_vals.update(dict(categories=Category.all()))
+
         try:
             page_index=int(self.param('page'))
         except:
@@ -182,13 +185,21 @@ class entriesByTag(BasePublicPage):
         if not slug:
              self.error(404)
              return
+
+        self.template_vals.update(dict(categories=Category.all()))
+
         try:
             page_index=int (self.param('page'))
         except:
             page_index=1
         slug=urldecode(slug)
 
-        entries=Entry.all().filter("published =", True).filter('tags =',slug).order("-date")
+        tags = slug.split(" ")
+        entries=Entry.all().filter("published =", True)
+        for t in tags:
+            entries = entries.filter('tags =', t)
+        entries = entries.order("-date")
+
         entries,links=Pager(query=entries,items_per_page=20).fetch(page_index)
         self.render('tag',{'entries':entries,'tag':slug,'pager':links})
 
@@ -206,6 +217,8 @@ class SinglePost(BasePublicPage):
     @cache()
     def get(self,slug=None,postid=None):
         #logging.error('postid = %s, slug = %s' % (postid, slug))
+
+        self.template_vals.update(dict(categories=Category.all()))
 
         if postid:
             entries = Entry.all().filter("published =", True).filter('post_id =', postid).fetch(1)
@@ -278,7 +291,7 @@ class SinglePost(BasePublicPage):
             return
         #check code ,rejest spam
         entry=entries[0]
-        logging.info(self.request.remote_addr+self.request.path+" "+entry.trackbackurl)
+        #logging.info(self.request.remote_addr+self.request.path+" "+entry.trackbackurl)
         #key=self.param("code")
         #if (self.request.uri!=entry.trackbackurl) or entry.is_external_page or not entry.allow_trackback:
         #import cgi

@@ -22,7 +22,7 @@ import traceback
 import micolog_template
 
 
-logging.info('module base reloaded')
+#logging.info('module base reloaded')
 def urldecode(value):
     return  urllib.unquote(urllib.unquote(value)).decode('utf8')
     #return  urllib.unquote(value).decode('utf8')
@@ -96,7 +96,7 @@ def cache(key="",time=3600):
             #arg[0] is BaseRequestHandler object
 
             if html:
-                logging.info('cache:'+skey)
+                #logging.info('cache:'+skey)
                 response.last_modified =html[1]
                 ilen=len(html)
                 if ilen>=3:
@@ -104,7 +104,8 @@ def cache(key="",time=3600):
                 if ilen>=4:
                     for skey,value in html[3].items():
                         response.headers[skey]=value
-                response.out.write(html[0])
+                return response.out.write(html[0])
+
             else:
                 if 'last-modified' not in response.headers:
                     response.last_modified = format_date(datetime.utcnow())
@@ -112,7 +113,7 @@ def cache(key="",time=3600):
                 method(*args, **kwargs)
                 result=response.out.getvalue()
                 status_code = response._Response__status[0]
-                logging.debug("Cache:%s"%status_code)
+                #logging.debug("Cache:%s"%status_code)
                 memcache.set(skey,(result,response.last_modified,status_code,response.headers),time)
 
         return _wrapper
@@ -308,7 +309,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 
         try:
             #sfile=getattr(self.blog.theme, template_file)
-            logging.debug("get_render:"+template_file)
+            #logging.debug("get_render:"+template_file)
             html = micolog_template.render(self.blog.theme, template_file, self.template_vals)
         except TemplateDoesNotExist:
             #sfile=getattr(self.blog.default_theme, template_file)
