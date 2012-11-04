@@ -38,6 +38,13 @@ div.container {
     font-style: Italic;
     margin-bottom: 10px;
 }
+.entry-body p {
+    line-height: 24px;
+}
+.entry-body img {
+    margin: 5px 0 5px 0;
+}
+
 .mycontainer {
     padding: 0 10px 0 10px;
 }

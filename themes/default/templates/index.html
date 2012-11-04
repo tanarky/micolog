@@ -2,6 +2,7 @@
 {% block content%}
 
 {% if entries %}
+
 {% for entry in entries %}
 <h2 class="entry-title"><a href="/{{ entry.link }}" rel="bookmark" title="記事詳細へ: {{entry.title}}">{{entry.title}}</a></h2>
 <p class="entry-pubdate">{{entry.date}}</p>
@@ -34,7 +35,21 @@
   {% endif %}
 </div>
 
-<br/><br/>
+<br/>
+{% if forloop.counter < 3 %}
+<p style="text-align:left;">
+<script type="text/javascript"><!--
+     google_ad_client = "ca-pub-1219756446801912";
+/* arekao2 */
+google_ad_slot = "7172681389";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+</p>
+{% endif %}
+<br/>
 {% endfor %}
 
 <div class="box">
