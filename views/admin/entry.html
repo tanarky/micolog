@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block header %}
+
 <style type='text/css' media='all'>
 	div#TB_title {
 		background-color: #222222;
@@ -140,12 +141,7 @@
 
    <div class="wrap">
 
-      <h2>{%ifequal entrytype "post"%}
-      {%trans "Write Post"%}
-        {%else%}
-      {%trans "Write Page" %}
-        {%endifequal%}
- </h2>
+      <h2>{%ifequal entrytype "post"%}{%trans "Write Post"%}{%else%}{%trans "Write Page" %}{%endifequal%}</h2>
       <div id="poststuff">
 
 <div id="submitlink" class="submitbox">
@@ -274,8 +270,8 @@
 <div class="clear"></div>
 <div class="stuffbox" id="tag">
 <h3>{% trans "Tag" %}</h3>
-<div class="inside" style="float:left;">
-	<input type="text" id="tags" value="{{entry.strtags|escape}}" tabindex="1" size="50" name="tags"/><br/>
+<div class="inside" style="">
+<input type="text" id="tags" value="{{entry.strtags|escape}}" tabindex="1" size="50" name="tags"/><br/>
 </div>
 {%include "selecttags.html"%}
 </div>
@@ -306,6 +302,7 @@
 
 {%endifequal%}
 
+<!--
 <div class="clear"></div>
 <div class="stuffbox">
 <h3>{% trans "Excerpt" %}</h3>
@@ -313,7 +310,15 @@
 	<textarea name="excerpt" style="width:98%"/>{%if entry.excerpt%}{{entry.excerpt|escape}}{%endif%}</textarea><br/>
 </div>
 </div>
+-->
 
+<div class="stuffbox" id="postdate">
+  <h3>{% trans "Post Date" %} ( 2012-09-01 15:00:00 etc. )</h3>
+  <div class="inside" style="">
+    <input type="text" id="postdate" value="{{entry.date|escape}}" tabindex="1" size="50" name="postdate"/><br/>
+  </div>
+</div>
+<div class="clear"></div>
 
 <input type="hidden" value="{{entry.key}}" name="key"/>
 <input type="hidden" value="{{action}}" name="action"/>
@@ -324,4 +329,4 @@
    </div>
    </form>
 
- {% endblock  %}
+ {% endblock  %}o

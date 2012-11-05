@@ -16,6 +16,8 @@ from app.trackback import TrackBack
 import xmlrpclib
 from xmlrpclib import Fault
 
+import datetime,time
+
 class Error404(base.BaseRequestHandler):
     #@printinfo
     def get(self,slug=None):
@@ -429,19 +431,28 @@ class admin_entry(base.BaseRequestHandler):
         entry_excerpt=self.param('excerpt').replace('\n','<br />')
         password=self.param('password')
         sticky=self.parambool('sticky')
-
         is_external_page=self.parambool('is_external_page')
         target=self.param('target')
         external_page_address=self.param('external_page_address')
 
+        try:
+            t = time.strptime(self.param('postdate')[:19], '%Y-%m-%d %H:%M:%S')
+            postdate = datetime.datetime(*t[:6])
+        except:
+            logging.info("post date error")
+            postdate = datetime.datetime.now()
         def mapit(cat):
             return {'name':cat.name,'slug':cat.slug,'select':cat.slug in cats}
 
         vals={'action':action,'postback':True,'cats':Category.all(),'entrytype':slug,
               'cats':map(mapit,Category.all()),
-              'entry':{ 'title':title,'content':content,'strtags':tags,'key':key,'published':published,
-                         'allow_comment':allow_comment,
-                         'allow_trackback':allow_trackback,
+              'entry':{ 'title':title,
+                        'content':content,
+                        'strtags':tags,
+                        'key':key,
+                        'published':published,
+                        'allow_comment':allow_comment,
+                        'allow_trackback':allow_trackback,
                         'slug':entry_slug,
                         'entry_parent':entry_parent,
                         'excerpt':entry_excerpt,
@@ -474,6 +485,7 @@ class admin_entry(base.BaseRequestHandler):
                 entry.author=self.author.user
                 entry.author_name=self.author.dispname
                 entry.password=password
+                entry.date=postdate
                 entry.sticky=sticky
                 if cats:
 
@@ -514,6 +526,7 @@ class admin_entry(base.BaseRequestHandler):
                     entry.author_name=self.author.dispname
                     entry.password=password
                     entry.sticky=sticky
+                    entry.date=postdate
                     newcates=[]
 
                     if cats:
