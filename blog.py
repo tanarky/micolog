@@ -30,57 +30,6 @@ class BasePublicPage(BaseRequestHandler):
     def initialize(self, request, response):
         BaseRequestHandler.initialize(self,request, response)
 
-        #m_pages=Entry.all().filter('entrytype =','page')\
-        #    .filter('published =',True)\
-        #    .filter('entry_parent =',0)\
-        #    .order('menu_order')
-        #blogroll=Link.all().filter('linktype =','blogroll')
-        #archives=Archive.all().order('-year').order('-month').fetch(12)
-        #alltags=Tag.all()
-        #cat = Category.all()
-        #logging .info(dict(cat))
-        #self.template_vals.update(
-        #    dict(
-        #        #menu_pages=m_pages,
-        #        #categories=Category.all(),
-        #        #blogroll=blogroll,
-        #        #archives=archives,
-        #        #alltags=alltags,
-        #        #recent_comments=Comment.all().order('-date').fetch(5)))
-        #        menu_pages=[],
-        #        categories=[],
-        #        blogroll=[],
-        #        archives=[],
-        #        alltags=[],
-        #        recent_comments=[]))
-
-#    def m_list_pages(self):
-#        menu_pages=None
-#        entry=None
-#        if self.template_vals.has_key('menu_pages'):
-#            menu_pages= self.template_vals['menu_pages']
-#        if self.template_vals.has_key('entry'):
-#            entry=self.template_vals['entry']
-#        ret=''
-#        current=''
-#        for page in menu_pages:
-#            if entry and entry.entrytype=='page' and entry.key()==page.key():
-#                current= 'current_page_item'
-#            else:
-#                current= 'page_item'
-#            #page is external page ,and page.slug is none.
-#            if page.is_external_page and not page.slug:
-#                ret+='<li class="%s"><a href="%s" target="%s" >%s</a></li>' % ( current,
-#                                                                                page.link,
-#                                                                                page.target,
-#                                                                                page.title)
-#            else:
-#                ret+='<li class="%s"><a href="/%s" target="%s">%s</a></li>'%( current,
-#                                                                              page.link,
-#                                                                              page.target,
-#                                                                              page.title)
-#        return ret
-
 class MainPage(BasePublicPage):
     def head(self,page=1):
         if g_blog.allow_pingback :
@@ -424,12 +373,20 @@ class SinglePage(SinglePost):
 class FeedHandler(BaseRequestHandler):
     @cache(time=600)
     def get(self,tags=None):
+        if g_blog.timedelta < 0:
+            sign = '-'
+            delta = -1 * int(g_blog.timedelta)
+        else:
+            sign  = '+'
+            delta = int(g_blog.timedelta)
+        tz = '%s%04d' % (sign, (delta * 100))
         entries = Entry.all().filter('entrytype =','post').filter('published =',True).order('-date').fetch(10)
         if entries and entries[0]:
             last_updated = entries[0].date
-            last_updated = last_updated.strftime("%a, %d %b %Y %H:%M:%S +0000")
+            last_updated = last_updated.strftime("%s %s" % ("%a, %d %b %Y %H:%M:%S", tz))
         for e in entries:
-            e.formatted_date = e.date.strftime("%a, %d %b %Y %H:%M:%S +0000")
+            #e.formatted_date = e.date.strftime("%a, %d %b %Y %H:%M:%S +0000")
+            e.formatted_date = e.date.strftime("%s %s" % ("%a, %d %b %Y %H:%M:%S", tz))
         self.response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
         self.render2('views/rss.xml',{'entries':entries,'last_updated':last_updated})
 
@@ -479,7 +436,7 @@ class SitemapHandler(BaseRequestHandler):
                 addurl(loc,None,'weekly',0.5)
 
 
-##		self.response.headers['Content-Type'] = 'application/atom+xml'
+	self.response.headers['Content-Type'] = 'application/xml; charset=UTF-8'
         self.render2('views/sitemap.xml',{'urlset':urls})
 
 

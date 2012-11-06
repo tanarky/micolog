@@ -48,7 +48,7 @@
         </div>
 
         <div class="span4">
-          <div class="mycontainer">
+          <div id="sidebar" class="mycontainer">
             {%include "sidebar.html" %}
           </div>
         </div>
@@ -104,6 +104,30 @@ $('#commentform').submit(function(){
 /* image resizing */
 if(navigator.userAgent.match(/iPhone/) || navigator.userAgent.match(/iPod/) || navigator.userAgent.match(/Android/)){
     $("img").removeAttr("width").removeAttr("height").addClass('img-rounded');
+}
+/* fixed sidebar */
+else {
+    var sidebar = $('#sidebar');
+    var offset = sidebar.offset();
+    var height = sidebar.height();
+    var W = $(window);
+    var is_shortnavi = (height + offset.top < W.height()) ? 1 : 0;
+    console.debug(is_shortnavi);
+
+    //if(height + offset.top > W.height()){
+    W.scroll(function () {
+        console.debug('window.height: ' + W.height() + ' , window.scrollTop: ' + W.scrollTop() + ' , sidebar.height: ' + height + ' , offset.top: ' + offset.top);
+
+        if(is_shortnavi && offset.top < W.scrollTop()){
+            sidebar.css({'position':'fixed', 'top':0});
+        }
+        else if(!is_shortnavi && height + offset.top < W.scrollTop() + W.height()) {
+            sidebar.css({'position':'fixed', 'bottom':0});
+        }
+        else {
+            sidebar.css({'position':''});
+        }
+    });
 }
 
 /* google analytics */
