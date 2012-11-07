@@ -32,13 +32,30 @@
   </li>
   <li>
     <h3 class="nav-title">PR</h3>
+
 <script>
+var ads = [
+    // LUXA 234*60
+    '<iframe frameborder="0" allowtransparency="true" height="60" width="234" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881426694" marginwidth="0"><script language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881426694"></scri'+'pt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881426694" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881426694" height="60" width="234" border="0"></a></noscript></iframe>',
+    // くまポン
+    '<iframe frameborder="0" allowtransparency="true" height="60" width="234" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881416792" marginwidth="0"><script language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881416792"></scri'+'pt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881416792" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881416792" height="60" width="234" border="0"></a></noscript></iframe>',
+    // ヤフオク
+    '<iframe frameborder="0" allowtransparency="true" height="60" width="234" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881481809" marginwidth="0"><script language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881481809"></scri'+'pt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881481809" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881481809" height="60" width="234" border="0"></a></noscript></iframe>',
+    // じゃらん
+    '<iframe frameborder="0" allowtransparency="true" height="60" width="234" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881481817" marginwidth="0"><script language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881481817"></scri'+'pt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881481817" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881481817" height="60" width="234" border="0"></a></noscript></iframe>'];
 
-var ads = ['<iframe frameborder="0" allowtransparency="true" height="250" width="300" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881480584" marginwidth="0"><script language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881480584"></scr'+'ipt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881480584" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881480584" height="250" width="300" border="0"></a></nos'+'cript></iframe>',
-           '<iframe frameborder="0" allowtransparency="true" height="60" width="234" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881426692" marginwidth="0"><scr'+'ipt language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881426692"></scr'+'ipt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881426692" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881426692" height="60" width="234" border="0"></a></noscript></iframe>',
-          '<iframe frameborder="0" allowtransparency="true" height="250" width="300" marginheight="0" scrolling="no" src="http://ad.jp.ap.valuecommerce.com/servlet/htmlbanner?sid=2195279&pid=881480613" marginwidth="0"><script language="javascript" src="http://ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=2195279&pid=881480613"></scr'+'ipt><noscript><a href="http://ck.jp.ap.valuecommerce.com/servlet/referral?sid=2195279&pid=881480613" target="_blank" ><img src="http://ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=2195279&pid=881480613" height="250" width="300" border="0"></a></noscript></iframe>']
-
-document.write(ads[parseInt(Math.random() * ads.length)]);
+Array.prototype.shuffle = function() {
+    var i = this.length;
+    while(i){
+        var j = Math.floor(Math.random()*i);
+        var t = this[--i];
+        this[i] = this[j];
+        this[j] = t;
+    }
+    return this;
+}
+ads.shuffle();
+document.write(ads.join('<br><br>'));
 
 </script>
 

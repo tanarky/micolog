@@ -12,7 +12,7 @@
     <link rel="alternate" type="application/rss+xml" title="{{ blog.title }} RSS Feed" href="{{ blog.feedurl }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link href="/static/wlwmanifest.xml" type="application/wlwmanifest+xml" rel="wlwmanifest"/>
-    {% block head_block %}{% endblock %}
+    {% block head_block %}{% endblock %}    
     {%endmf%}
   </head>
   <body>
@@ -114,20 +114,27 @@ else {
     var is_shortnavi = (height + offset.top < W.height()) ? 1 : 0;
     console.debug(is_shortnavi);
 
-    //if(height + offset.top > W.height()){
-    W.scroll(function () {
-        console.debug('window.height: ' + W.height() + ' , window.scrollTop: ' + W.scrollTop() + ' , sidebar.height: ' + height + ' , offset.top: ' + offset.top);
-
+    function fixen() {
         if(is_shortnavi && offset.top < W.scrollTop()){
             sidebar.css({'position':'fixed', 'top':0});
         }
-        else if(!is_shortnavi && height + offset.top < W.scrollTop() + W.height()) {
+        else if(!is_shortnavi && height + offset.top <= W.scrollTop() + W.height() - 15) {
+            /*
+            console.debug(height);
+            console.debug(offset.top);
+            console.debug(W.scrollTop());
+            console.debug(W.height());
+            */
             sidebar.css({'position':'fixed', 'bottom':0});
         }
         else {
             sidebar.css({'position':''});
         }
-    });
+    }
+    //W.scroll(fixen);
+    W.bind("scroll",    fixen);
+    W.bind("touchmove", fixen);
+    W.bind("touchend",  fixen);
 }
 
 /* google analytics */
