@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %} {{entry.title}} - {{blog.title}} {% endblock %}
+{% block keywords %}{% if entry.strtags %}{% for tag in entry.tags %}{{tag}},{% endfor %}{% endif %}{% endblock %}
 {% block content%}
 
 {% if entry %}

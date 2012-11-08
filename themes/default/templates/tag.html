@@ -1,5 +1,6 @@
 ﻿{% extends "base.html" %}
-{% block title %} {{category.name}} - {{blog.title}} {% endblock %}
+{% block title %} {{tag}} - {{blog.title}} {% endblock %}
+{% block keywords %}{{tag}},{% endblock %}
 {% block content%}
 <h1 class="nav-title">「{{tag}}」タグがついたページ一覧</h1>
 <ul>
@@ -8,10 +9,11 @@
   {% endfor %}
 </ul>
 
-{% if forloop.counter < 3 %}
+<br>
+
 <p style="text-align:left;">
 <script type="text/javascript"><!--
-     google_ad_client = "ca-pub-1219756446801912";
+google_ad_client = "ca-pub-1219756446801912";
 /* arekao2 */
 google_ad_slot = "7172681389";
 google_ad_width = 300;
@@ -20,14 +22,13 @@ google_ad_height = 250;
 </script>
 <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 </p>
-{% endif %}
 
 <div class="navigation">
   {% if pager.prev %}
-  <div class="alignleft"><a href="?page={{ pager.prev}}">&laquo; 上一页</a></div>
+  <div class="alignleft"><a href="?page={{ pager.prev}}">&laquo; 次のページ</a></div>
   {% endif %}
   {% if pager.next %}
-  <div class="alignright"><a href="?page={{ pager.next }}">下一页 &raquo;</a></div>
+  <div class="alignright"><a href="?page={{ pager.next }}">前のページ &raquo;</a></div>
   {% endif %}
 </div>
 

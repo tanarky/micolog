@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os,logging
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from google.appengine.dist import use_library
@@ -173,7 +173,7 @@ class Blog(db.Model):
     version=0.743
     timedelta=db.FloatProperty(default=8.0)# hours
     language=db.StringProperty(default="en-us")
-    sitemap_entries=db.IntegerProperty(default=30)
+    sitemap_entries=db.IntegerProperty(default=100)
     sitemap_include_category=db.BooleanProperty(default=False)
     sitemap_include_tag=db.BooleanProperty(default=False)
     sitemap_ping=db.BooleanProperty(default=False)

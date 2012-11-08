@@ -1,5 +1,6 @@
 ﻿{% extends "base.html" %}
 {% block title %} {{category.name}} - {{blog.title}} {% endblock %}
+{% block keywords %}{{category.name}},{% endblock %}
 {% block content%}
 <h1 class="nav-title">「{{category.name}}」カテゴリの記事一覧</h1>
 <ul>
@@ -8,7 +9,8 @@
   {% endfor %}
 </ul>
 
-{% if forloop.counter < 3 %}
+<br>
+
 <p style="text-align:left;">
 <script type="text/javascript"><!--
      google_ad_client = "ca-pub-1219756446801912";
@@ -20,8 +22,6 @@ google_ad_height = 250;
 </script>
 <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 </p>
-{% endif %}
-
 
 <div class="navigation">
   {% if pager.prev %}
