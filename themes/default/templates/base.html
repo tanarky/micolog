@@ -20,22 +20,10 @@
       <div class="row">
         <div class="span12">
           <div class="mycontainer">
-
-            <ul class="breadcrumb">
-              <li class="active"><h1><a href="/"><span class="icon-home"></span> {{ blog.title }} トップページ</a></h1></li>
-<!--
-              <span class="divider">&lt;</span>
-              <li><h2><a href="#">Home</a></h2></li>
-              <span class="divider">&lt;</span>
-              <li><h2><a href="#">Library</a></h2></li>
--->
-            </ul>
-
             <div id="myhero">
-              <p class="mytitle">{{ blog.title }}</p>
+              <p class="mytitle"><a href="/">{{ blog.title }}</a></p>
               <p class="mysubtitle">{{ blog.subtitle }}</p>
             </div>
-
           </div>
         </div>
       </div>
@@ -57,6 +45,7 @@
     </div>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<!--<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>-->
 <script>
 commentuser=$.cookie('comment_user');
 if (commentuser)
@@ -101,6 +90,10 @@ $('#commentform').submit(function(){
     return true;
 });
 
+function dbg(msg){
+    $("#dbg").text($("#dbg").text() + msg);
+}
+
 /* image resizing */
 if(navigator.userAgent.match(/iPhone/) || navigator.userAgent.match(/iPod/) || navigator.userAgent.match(/Android/)){
     $("img").removeAttr("width").removeAttr("height").addClass('img-rounded');
@@ -112,19 +105,20 @@ else {
     var height = sidebar.height();
     var W = $(window);
     var is_shortnavi = (height + offset.top < W.height()) ? 1 : 0;
-    console.debug(is_shortnavi);
+    //console.debug(is_shortnavi);
 
-    function fixen() {
+    function fixen(event) {
+        ////console.debug(event.type);
+        //dbg(event.type + ":" + W.scrollTop() + ":" + new Date() + "\n");
+
         if(is_shortnavi && offset.top < W.scrollTop()){
             sidebar.css({'position':'fixed', 'top':0});
         }
         else if(!is_shortnavi && height + offset.top <= W.scrollTop() + W.height() - 15) {
-            /*
-            console.debug(height);
-            console.debug(offset.top);
-            console.debug(W.scrollTop());
-            console.debug(W.height());
-            */
+            //console.debug(height);
+            //console.debug(offset.top);
+            //console.debug(W.scrollTop());
+            //console.debug(W.height());
             sidebar.css({'position':'fixed', 'bottom':0});
         }
         else {
@@ -133,8 +127,9 @@ else {
     }
     //W.scroll(fixen);
     W.bind("scroll",    fixen);
-    W.bind("touchmove", fixen);
-    W.bind("touchend",  fixen);
+    //W.bind("touchstart", fixen);
+    //W.bind("touchmove", fixen);
+    //W.bind("touchend",  fixen);
 }
 
 /* google analytics */

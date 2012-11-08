@@ -13,8 +13,38 @@ h2,h3,h4,h5 {
 }
 
 body {
+    background-color: #fff;
     line-height: 24px;
 }
+.container {
+    background-color: #fefefe;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+/*
+    background-image: url(/static/images/bg.png);
+    background-color: #f00;
+
+@media screen and (min-width:980px){
+    body {
+        padding-top: 30px;
+    }
+}
+@media screen and (max-width:979px){
+    body{
+        padding-top: 0px;
+    }
+}
+.hoge {
+    width: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
+*/
+
 div.container {
 
 }
@@ -28,6 +58,12 @@ a>img {
     font-size: 22px;
     margin-bottom: 10px;
     border-bottom: 1px dashed #aaa;
+}
+.mytitle>a{
+    color:#333;
+}
+.mytitle>a:hover{
+    text-decoration:none;
 }
 .entry-title {
     font-size: 22px;
@@ -54,8 +90,8 @@ a>img {
     margin: 20px 0;
 }
 #myhero .mytitle {
-    font-size: 38px;
-    line-height: 38px;
+    font-size: 35px;
+    line-height: 35px;
     text-shadow: 3px 3px 5px #888;
 }
 #myhero .mysubtitle {
