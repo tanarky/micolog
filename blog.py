@@ -371,7 +371,7 @@ class SinglePage(SinglePost):
 
 
 class FeedHandler(BaseRequestHandler):
-    @cache(time=600)
+    @cache(time=3600)
     def get(self,tags=None):
         if g_blog.timedelta < 0:
             sign = '-'
@@ -391,7 +391,7 @@ class FeedHandler(BaseRequestHandler):
         self.render2('views/rss.xml',{'entries':entries,'last_updated':last_updated})
 
 class CommentsFeedHandler(BaseRequestHandler):
-    @cache(time=600)
+    @cache(time=3600)
     def get(self,tags=None):
         comments = Comment.all().order('-date').filter('ctype =',0).fetch(10)
         if comments and comments[0]:
@@ -409,7 +409,7 @@ class SitemapHandler(BaseRequestHandler):
         def addurl(loc,lastmod=None,changefreq=None,priority=None):
             url_info = {
                 'location':   loc,
-                'lastmod':	lastmod,
+                'lastmod':    lastmod,
                 'changefreq': changefreq,
                 'priority':   priority
             }
