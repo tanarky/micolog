@@ -79,7 +79,7 @@ class MainPage(BasePublicPage):
 
         return self.render('index',
                            dict(entries=entries,
-                                categories=Category.all(),
+                                categories=Category.allTops(),
                                 show_prev=show_prev,
                                 show_next=show_next,
                                 pageindex=page,
