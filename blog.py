@@ -120,7 +120,7 @@ class archiveByMonth(BasePublicPage):
         except:
             page_index=1
 
-        self.template_vals.update(dict(categories=Category.all()))
+        self.template_vals.update(dict(categories=Category.allTops()))
 
         firstday=datetime(int(year),int(month),1)
         if int(month)!=12:
