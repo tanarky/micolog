@@ -1,24 +1,13 @@
 <ul class="unstyled">
   <li class="mgb10">
     <h3 class="nav-title">カテゴリ</h3>
-    <ul class="">
-      {%for cate in categories%}
-      <li>
-	<a href="/category/{{cate.slug|urlencode}}">{{cate.name}}({{cate.count}})</a>
-      </li>
-      {%endfor%}
-    </ul>
+    <div style="line-height:20px">
+      {% recurse cat in categories children="children" indent=(5,20) %}
+      <p style="margin:0 0 5px {{indent}}px"><a href="/category/{{cat.slug|urlencode}}">{{cat.name}}({{cat.count}})</a></p>
+      {% yield %}
+      {% endrecurse %}
+    </div>
   </li>
-<!--
-  <li>
-    <h3>Blog roll</h3>
-    <ul class="">
-      {%for link in blogroll%}
-      <li><a href="{{link.href}}">{{link.linktext}}</a></li>
-      {%endfor%}
-    </ul>
-  </li>
--->
   <li>
     <h3 class="nav-title">サイト内検索</h3>
     <form method="get" id="searchform" action="http://www.google.com/search">

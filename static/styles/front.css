@@ -43,13 +43,13 @@ body {
     -webkit-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 }
+a>img {
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
 */
 
 div.container {
 
-}
-a>img {
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
 }
 .mgb10 {
     margin-bottom: 10px;

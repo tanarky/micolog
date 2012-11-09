@@ -169,7 +169,8 @@ class SinglePost(BasePublicPage):
     def get(self,slug=None,postid=None):
         #logging.error('postid = %s, slug = %s' % (postid, slug))
 
-        self.template_vals.update(dict(categories=Category.all()))
+        #self.template_vals.update(dict(categories=Category.all()))
+        self.template_vals.update(dict(categories=Category.allTops()))
 
         if postid:
             entries = Entry.all().filter("published =", True).filter('post_id =', postid).fetch(1)
