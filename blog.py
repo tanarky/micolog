@@ -95,7 +95,7 @@ class entriesByCategory(BasePublicPage):
             self.error(404)
             return
 
-        self.template_vals.update(dict(categories=Category.all()))
+        self.template_vals.update(dict(categories=Category.allTops()))
 
         try:
             page_index=int(self.param('page'))
@@ -120,6 +120,8 @@ class archiveByMonth(BasePublicPage):
         except:
             page_index=1
 
+        self.template_vals.update(dict(categories=Category.all()))
+
         firstday=datetime(int(year),int(month),1)
         if int(month)!=12:
             lastday=datetime(int(year),int(month)+1,1)
@@ -137,7 +139,7 @@ class entriesByTag(BasePublicPage):
              self.error(404)
              return
 
-        self.template_vals.update(dict(categories=Category.all()))
+        self.template_vals.update(dict(categories=Category.allTops()))
 
         try:
             page_index=int (self.param('page'))
@@ -169,7 +171,6 @@ class SinglePost(BasePublicPage):
     def get(self,slug=None,postid=None):
         #logging.error('postid = %s, slug = %s' % (postid, slug))
 
-        #self.template_vals.update(dict(categories=Category.all()))
         self.template_vals.update(dict(categories=Category.allTops()))
 
         if postid:
