@@ -403,7 +403,7 @@ class CommentsFeedHandler(BaseRequestHandler):
         self.render2('views/comments.xml',{'comments':comments,'last_updated':last_updated})
 
 class SitemapHandler(BaseRequestHandler):
-    @cache(time=36000)
+    @cache(time=360000)
     def get(self,tags=None):
         urls = []
         def addurl(loc,lastmod=None,changefreq=None,priority=None):
