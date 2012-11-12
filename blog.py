@@ -18,6 +18,8 @@ from base import *
 from model import *
 from django.utils.translation import ugettext as _
 
+from google.appengine.api import memcache
+
 def doRequestHandle(old_handler,new_handler,**args):
     new_handler.initialize(old_handler.request,old_handler.response)
     return  new_handler.get(**args)
@@ -29,6 +31,13 @@ def doRequestPostHandle(old_handler,new_handler,**args):
 class BasePublicPage(BaseRequestHandler):
     def initialize(self, request, response):
         BaseRequestHandler.initialize(self,request, response)
+    def get_sidebar(self):
+        sidebar = memcache.get('sidebar')
+        if not sidebar:
+            logging.info('cache miss')
+            sidebar = self.get_render('sidebar', dict(categories=Category.allTops()))
+            memcache.set('sidebar', sidebar, 60*60*24)
+        return sidebar
 
 class MainPage(BasePublicPage):
     def head(self,page=1):
@@ -72,14 +81,13 @@ class MainPage(BasePublicPage):
                 filter("published =", True).order('-sticky').order('-date').\
                 fetch(self.blog.posts_per_page, offset = (page-1) * self.blog.posts_per_page)
 
-
         show_prev = entries and  (not (page == 1))
         show_next = entries and  (not (page == max_page))
         #print page,max_page,g_blog.entrycount,self.blog.posts_per_page
 
         return self.render('index',
                            dict(entries=entries,
-                                categories=Category.allTops(),
+                                sidebar=self.get_sidebar(),
                                 show_prev=show_prev,
                                 show_next=show_next,
                                 pageindex=page,
@@ -95,8 +103,6 @@ class entriesByCategory(BasePublicPage):
             self.error(404)
             return
 
-        self.template_vals.update(dict(categories=Category.allTops()))
-
         try:
             page_index=int(self.param('page'))
         except:
@@ -108,7 +114,7 @@ class entriesByCategory(BasePublicPage):
         if cats:
             entries=Entry.all().filter("published =", True).filter('categorie_keys =',cats[0].key()).order("-date")
             entries,links=Pager(query=entries,items_per_page=20).fetch(page_index)
-            self.render('category', dict(entries=entries, category=cats[0], pager=links))
+            self.render('category', {'entries':entries, 'category':cats[0], 'pager':links, 'sidebar':self.get_sidebar()})
         else:
             self.error(404,slug)
 
@@ -120,8 +126,6 @@ class archiveByMonth(BasePublicPage):
         except:
             page_index=1
 
-        self.template_vals.update(dict(categories=Category.allTops()))
-
         firstday=datetime(int(year),int(month),1)
         if int(month)!=12:
             lastday=datetime(int(year),int(month)+1,1)
@@ -130,7 +134,11 @@ class archiveByMonth(BasePublicPage):
         entries=db.GqlQuery("SELECT * FROM Entry WHERE date > :1 AND date <:2 AND entrytype =:3 AND published = True ORDER BY date DESC",firstday,lastday,'post')
         entries,links=Pager(query=entries).fetch(page_index)
 
-        self.render('month', dict(entries=entries, year=year, month=month, pager=links))
+        self.render('month', {'entries':entries,
+                              'year':year,
+                              'month':month,
+                              'pager':links,
+                              'sidebar':self.get_sidebar()})
 
 class entriesByTag(BasePublicPage):
     @cache()
@@ -138,8 +146,6 @@ class entriesByTag(BasePublicPage):
         if not slug:
              self.error(404)
              return
-
-        self.template_vals.update(dict(categories=Category.allTops()))
 
         try:
             page_index=int (self.param('page'))
@@ -154,7 +160,7 @@ class entriesByTag(BasePublicPage):
         entries = entries.order("-date")
 
         entries,links=Pager(query=entries,items_per_page=20).fetch(page_index)
-        self.render('tag',{'entries':entries,'tag':slug,'pager':links})
+        self.render('tag',{'entries':entries,'tag':slug,'pager':links, 'sidebar':self.get_sidebar()})
 
 class SinglePost(BasePublicPage):
     def paramint(self, name, default=0):
@@ -171,8 +177,6 @@ class SinglePost(BasePublicPage):
     def get(self,slug=None,postid=None):
         #logging.error('postid = %s, slug = %s' % (postid, slug))
 
-        self.template_vals.update(dict(categories=Category.allTops()))
-
         if postid:
             entries = Entry.all().filter("published =", True).filter('post_id =', postid).fetch(1)
         else:
@@ -188,26 +192,26 @@ class SinglePost(BasePublicPage):
             return self.redirect(entry.external_page_address,True)
         if g_blog.allow_pingback and entry.allow_trackback:
             self.response.headers['X-Pingback']="%s/rpc"%str(g_blog.baseurl)
-        entry.readtimes += 1
+        #entry.readtimes += 1
         #entry.put()
-        self.entry=entry
+        self.entry   = entry
 
-
-        comments=entry.get_comments_by_page(mp,self.blog.comments_per_page)
-
-##		commentuser=self.request.cookies.get('comment_user', '')
-##		if commentuser:
-##			commentuser=commentuser.split('#@#')
-##		else:
-        commentuser=['','','']
-
-        comments_nav=self.get_comments_nav(mp,entry.purecomments().count())
+        comments     = entry.get_comments_by_page(mp,self.blog.comments_per_page)
+        commentuser  = ['','','']
+        comments_nav = self.get_comments_nav(mp,entry.purecomments().count())
 
         if entry.entrytype=='post':
             self.render('single',
-                        dict(entry=entry, relateposts=entry.relateposts, comments=comments, user_name=commentuser[0],
-                             user_email=commentuser[1], user_url=commentuser[2], checknum1=random.randint(1, 10),
-                             checknum2=random.randint(1, 10), comments_nav=comments_nav))
+                        dict(entry=entry,
+                             sidebar=self.get_sidebar(),
+                             relateposts=entry.relateposts,
+                             comments=comments,
+                             user_name=commentuser[0],
+                             user_email=commentuser[1],
+                             user_url=commentuser[2],
+                             checknum1=random.randint(1, 10),
+                             checknum2=random.randint(1, 10),
+                             comments_nav=comments_nav))
 
         else:
             self.render('page',
@@ -373,7 +377,7 @@ class SinglePage(SinglePost):
 
 
 class FeedHandler(BaseRequestHandler):
-    @cache(time=3600)
+    @cache()
     def get(self,tags=None):
         if g_blog.timedelta < 0:
             sign = '-'
@@ -393,7 +397,7 @@ class FeedHandler(BaseRequestHandler):
         self.render2('views/rss.xml',{'entries':entries,'last_updated':last_updated})
 
 class CommentsFeedHandler(BaseRequestHandler):
-    @cache(time=3600)
+    @cache()
     def get(self,tags=None):
         comments = Comment.all().order('-date').filter('ctype =',0).fetch(10)
         if comments and comments[0]:
@@ -405,7 +409,7 @@ class CommentsFeedHandler(BaseRequestHandler):
         self.render2('views/comments.xml',{'comments':comments,'last_updated':last_updated})
 
 class SitemapHandler(BaseRequestHandler):
-    @cache(time=360000)
+    @cache(time=86400)
     def get(self,tags=None):
         urls = []
         def addurl(loc,lastmod=None,changefreq=None,priority=None):
@@ -443,7 +447,7 @@ class SitemapHandler(BaseRequestHandler):
 
 
 class Error404(BaseRequestHandler):
-   @cache(time=36000)
+   @cache()
    def get(self,slug=None):
        self.error(404)
 

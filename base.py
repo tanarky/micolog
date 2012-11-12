@@ -80,7 +80,7 @@ def hostonly(method):
 def format_date(dt):
     return dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
 
-def cache(key="",time=3600):
+def cache(key="",time=28800):
     def _decorate(method):
         def _wrapper(*args, **kwargs):
             from model import g_blog

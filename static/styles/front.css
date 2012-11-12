@@ -14,42 +14,15 @@ h2,h3,h4,h5 {
 
 body {
     line-height: 24px;
+    background-image: url(/static/images/heart.jpg);
+    background-attachment: fixed;
 }
 .container {
-    background-color: #fefefe;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
 }
-
-@media screen and (min-width:768px){
-    body {
-        background-image: url(/static/images/heart.jpg);
-    }
-}
-
-/*
-    background-image: url(/static/images/bg.png);
-    background-color: #f00;
-
-@media screen and (max-width:979px){
-    body{
-        padding-top: 0px;
-    }
-}
-.hoge {
-    width: 50px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-}
-a>img {
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
-}
-*/
 
 div.container {
-
+    background-color:rgba(255,255,255,0.8);
 }
 .mgb10 {
     margin-bottom: 10px;
@@ -68,6 +41,7 @@ div.container {
 }
 .entry-title {
     font-size: 22px;
+    line-height: 28px;
     margin-bottom: 2px;
     border-bottom: 1px dashed #aaa;
     color: #555;

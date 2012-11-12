@@ -53,12 +53,12 @@ google_ad_height = 250;
 {% endfor %}
 
 <div class="box">
-  <div class="alignleft">{% if show_next %}<a href="/page/{{ pageindex|add:"1" }}">&laquo; Older Entries</a>{%endif%}</div>
+  <div class="alignleft">{% if show_next %}<a href="/page/{{ pageindex|add:"1" }}">古い記事 &raquo;</a>{%endif%}</div>
   <div class="aligncenter">
     <script type="text/javascript" src="/static/js/pagenavi.js"></script>
     <script type="text/javascript">showPageLink("/page/",{{ pageindex }},{{ pagecount }},"");</script>
   </div>
-  <div class="alignright">{% if show_prev %}<a href="/page/{{ pageindex|add:"-1" }}">Newer Entries &raquo;</a>{%endif%}</div>
+  <div class="alignright">{% if show_prev %}<a href="/page/{{ pageindex|add:"-1" }}">&laquo; 新しい記事</a>{%endif%}</div>
 </div>
 
 {% else %}
