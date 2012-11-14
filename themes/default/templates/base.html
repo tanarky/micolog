@@ -8,15 +8,14 @@
     <meta lang="ja" content="{% block keywords %}{% endblock %}みかん,ブログ,食べログ,ブログ村" name="keywords">
     <meta lang="ja" content="六本木・赤坂・麻布十番・西麻布のお得＆美食ランチ情報満載！" name="Description">
 
-    {%mf head%}
     <link href="/static/bootstrap/css/bootstrap.org.min.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="/static/styles/front.css" rel="stylesheet">
     <link rel="alternate" type="application/rss+xml" title="{{ blog.title }} RSS Feed" href="{{ blog.feedurl }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link href="/static/wlwmanifest.xml" type="application/wlwmanifest+xml" rel="wlwmanifest"/>
-    {% block head_block %}{% endblock %}    
-    {%endmf%}
+    <link rel="canonical" href="{{ blog.baseurl }}{% block canonical %}{% endblock %}" />
+
   </head>
   <body>
     <div class="container">
@@ -145,7 +144,10 @@ _gaq.push(['_trackPageview']);
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
+
+var nend_params = {"media":4149,"site":16371,"spot":24865,"type":2,"oriented":1};
 </script>
+<script type="text/javascript" src="http://js1.nend.net/js/nendAdLoader.js"></script>
 
   </body>
 </html>

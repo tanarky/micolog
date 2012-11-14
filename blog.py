@@ -200,10 +200,11 @@ class SinglePost(BasePublicPage):
         commentuser  = ['','','']
         comments_nav = self.get_comments_nav(mp,entry.purecomments().count())
 
+        sidebar = self.get_sidebar()
         if entry.entrytype=='post':
             self.render('single',
                         dict(entry=entry,
-                             sidebar=self.get_sidebar(),
+                             sidebar=sidebar,
                              relateposts=entry.relateposts,
                              comments=comments,
                              user_name=commentuser[0],
@@ -215,9 +216,9 @@ class SinglePost(BasePublicPage):
 
         else:
             self.render('page',
-                        dict(entry=entry, relateposts=entry.relateposts, comments=comments, user_name=commentuser[0],
-                             user_email=commentuser[1], user_url=commentuser[2], checknum1=random.randint(1, 10),
-                             checknum2=random.randint(1, 10), comments_nav=comments_nav))
+                        dict(entry=entry,
+                             sidebar=sidebar,
+                             relateposts=entry.relateposts))
 
     def post(self,slug=None,postid=None):
         '''handle trackback'''
@@ -377,7 +378,7 @@ class SinglePage(SinglePost):
 
 
 class FeedHandler(BaseRequestHandler):
-    @cache()
+    @cache(time=3600)
     def get(self,tags=None):
         if g_blog.timedelta < 0:
             sign = '-'
@@ -391,7 +392,6 @@ class FeedHandler(BaseRequestHandler):
             last_updated = entries[0].date
             last_updated = last_updated.strftime("%s %s" % ("%a, %d %b %Y %H:%M:%S", tz))
         for e in entries:
-            #e.formatted_date = e.date.strftime("%a, %d %b %Y %H:%M:%S +0000")
             e.formatted_date = e.date.strftime("%s %s" % ("%a, %d %b %Y %H:%M:%S", tz))
         self.response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
         self.render2('views/rss.xml',{'entries':entries,'last_updated':last_updated})
@@ -638,55 +638,16 @@ class CheckImg(BaseRequestHandler):
         self.response.headers['Content-Type'] = "image/png"
         self.response.out.write(imgdata)
 
-#class getMedia(webapp.RequestHandler):
-#    def get(self,slug):
-#        media=Media.get(slug)
-#        if media:
-#            self.response.headers['Expires'] = 'Thu, 15 Apr 3010 20:00:00 GMT'
-#            self.response.headers['Cache-Control'] = 'max-age=3600,public'
-#            self.response.headers['Content-Type'] = str(media.mtype)
-#            self.response.out.write(media.bits)
-#            a=self.request.get('a')
-#            if a and a.lower()=='download':
-#                media.download+=1
-#                media.put()
-#
-#class CheckCode(BaseRequestHandler):
-#    def get(self):
-#        sess=Session(self,timeout=900)
-#        num1=random.randint(30,50)
-#        num2=random.randint(1,10)
-#        code="<span style='font-size:12px;color:red'>%d - %d =</span>"%(num1,num2)
-#        sess['code']=num1-num2
-#        sess.save()
-#        #self.response.headers['Content-Type'] = "text/html"
-#        self.response.out.write(code)
-#
-#class Other(BaseRequestHandler):
-#    def get(self,slug=None):
-#        if not g_blog.tigger_urlmap(slug,page=self):
-#            self.error(404)
-#
-#    def post(self,slug=None):
-#        content=g_blog.tigger_urlmap(slug,page=self)
-#        if content:
-#            self.write(content)
-#        else:
-#            self.error(404)
-#
-#def getZipHandler(**args):
-#    return ('/xheditor/(.*)',zipserve.make_zip_handler('''D:\\Projects\\eric-guo\\plugins\\xheditor\\xheditor.zip'''))
-
 def main():
     webapp.template.register_template_library('app.filter')
     webapp.template.register_template_library('app.recurse')
     urls = [
             ('/\d{4}/\d{1,2}/(\d+)(.*)', SinglePost2),   # /2012/10/ID/SLUG
-            ('/custom/(.*)',             SinglePage),    # /custom/SLUG
+            ('/p/(.*)',                  SinglePage),    # /custom/SLUG
             ('/page/(.*)',               MainPage),      # /page/SLUG
             ('/tag/(.*)',                entriesByTag),
             ('/category/(.*)',           entriesByCategory),
-            ('/(\d{4})/(\d{1,2})',       archiveByMonth),
+            ('/(\d{4})/(\d{2})',         archiveByMonth),
             ('/',                        MainPage),
             ('/checkimg/',               CheckImg),
             ('/skin',                    ChangeTheme),

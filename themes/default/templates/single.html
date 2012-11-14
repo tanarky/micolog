@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% block title %} {{entry.title}} - {{blog.title}} {% endblock %}
 {% block keywords %}{% if entry.strtags %}{% for tag in entry.tags %}{{tag}},{% endfor %}{% endif %}{% endblock %}
+{% block canonical %}{% if entry %}/{{ entry.link }}{% endif %}{% endblock %}
 {% block content%}
 
 {% if entry %}
 <h1 class="entry-title">{{entry.title}}</h1>
-<p class="entry-pubdate">{{entry.date}}</p>
+<p class="entry-pubdate" style="vertical-align:middle;">{{entry.date}}</p>
 
 <div class="entry-body">
   {{ entry.content|safe }}

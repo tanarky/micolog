@@ -1,6 +1,7 @@
 ﻿{% extends "base.html" %}
 {% block title %} {{category.name}} - {{blog.title}} {% endblock %}
 {% block keywords %}{{category.name}},{% endblock %}
+{% block canonical %}/category/{{ category.slug|urlencode }}{% endblock %}
 {% block content%}
 <h1 class="nav-title">「{{category.name}}」カテゴリの記事一覧</h1>
 <ul>
