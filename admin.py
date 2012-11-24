@@ -1000,13 +1000,13 @@ class WpHandler(base.BaseRequestHandler):
 
         if(all):
             entries = Entry.all().order('-date')
-            filename='micolog.%s.xml'%datetime.now().strftime('%Y-%m-%d')
+            filename='micolog.%s.xml' % datetime.datetime.now().strftime('%Y-%m-%d')
         else:
             str_date_begin=self.param('date_begin')
             str_date_end=self.param('date_end')
             try:
-                date_begin=datetime.strptime(str_date_begin,"%Y-%m-%d")
-                date_end=datetime.strptime(str_date_end,"%Y-%m-%d")
+                date_begin=datetime.datetime.strptime(str_date_begin,"%Y-%m-%d")
+                date_end=datetime.datetime.strptime(str_date_end,"%Y-%m-%d")
                 entries = Entry.all().filter('date >=',date_begin).filter('date <',date_end).order('-date')
                 filename='micolog.%s.%s.xml'%(str(str_date_begin),str(str_date_end))
             except:
