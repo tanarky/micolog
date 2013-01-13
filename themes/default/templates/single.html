@@ -13,6 +13,8 @@
 <div class="entry-body">
   {{ entry.content|safe }}
 
+  <br/>{% include "ad_arekao2.html" %}<br/>
+
   {%mf after_entry_content%}
     {%if relateposts%}
     <br/><br/>
@@ -37,7 +39,6 @@
   </p>
   {% endif %}
 </div>
-
 
 {% include "comments.html" %}
 {% endif %}
