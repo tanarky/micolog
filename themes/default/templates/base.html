@@ -117,17 +117,12 @@ else {
             sidebar.css({'position':'fixed', 'top':0});
         }
         else if(!is_shortnavi && height + offset.top <= W.scrollTop() + W.height() - 15) {
-            //console.debug(height);
-            //console.debug(offset.top);
-            //console.debug(W.scrollTop());
-            //console.debug(W.height());
             sidebar.css({'position':'fixed', 'bottom':0});
         }
         else {
             sidebar.css({'position':''});
         }
     }
-    //W.scroll(fixen);
     W.bind("scroll",    fixen);
     //W.bind("touchstart", fixen);
     //W.bind("touchmove", fixen);
@@ -151,10 +146,6 @@ else {
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
-var nend_params = {"media":4149,"site":16371,"spot":24865,"type":2,"oriented":1};
 </script>
-<script type="text/javascript" src="http://js1.nend.net/js/nendAdLoader.js"></script>
-<script type="text/javascript" src="http://dist.tanarky.com/get_user_env.js"></script>
   </body>
 </html>
