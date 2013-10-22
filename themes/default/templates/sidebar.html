@@ -1,5 +1,16 @@
 <ul class="unstyled">
   <li class="mgb10">
+
+    <!-- i-mobile for PC client script -->
+    <script type="text/javascript">
+imobile_pid = "23240";
+imobile_asid = "137243";
+imobile_width = 300;
+imobile_height = 250;
+    </script>
+    <script src="http://spdeliver.i-mobile.co.jp/script/ads.js?20101001" type="text/javascript"></script>
+
+
     <h3 class="nav-title">カテゴリ</h3>
     <div style="line-height:20px">
       {% recurse cat in categories children="children" indent=(5,20) %}
@@ -29,14 +40,11 @@
   <li>
     <h3 class="nav-title">PR</h3>
 
-<script type="text/javascript">
-// PC
-var nend_params = {"media":4149,"site":44142,"spot":87380,"type":1,"oriented":4};
-
-//// SmartPhone
-//var nend_params = {"media":4149,"site":16371,"spot":24865,"type":2,"oriented":1};
-</script>
+<!-- PC -->
+<script type="text/javascript">var nend_params = {"media":4149,"site":44142,"spot":87380,"type":1,"oriented":4};</script>
 <script type="text/javascript" src="http://js1.nend.net/js/nendAdLoader.js"></script>
+
+<br>
 
 <script>
 var ads = [
