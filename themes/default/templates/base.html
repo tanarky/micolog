@@ -156,16 +156,21 @@ else {
 
 var device = (typeof navigator !== 'undefined' && typeof navigator.userAgent == 'string') ? navigator.userAgent : '';
 if((device.indexOf('iPhone') > 0 && device.indexOf('iPad') == -1) || device.indexOf('iPod') > 0 || device.indexOf('Android') > 0){
-  if(50 < Math.floor(Math.random()*100+1)){
+  if(Math.floor(Math.random()*100+1) % 2){
       //alert('NEND');
       document.write('<script>var nend_params = {"media":4149,"site":16371,"spot":24865,"type":2,"oriented":1};</scr'+'ipt>');
       document.write('<script type="text/javascript" src="http://js1.nend.net/js/nendAdLoader.js"></s'+'cript>');
   }
   else {
-      //alert('i-mobile');
-      document.write('<script type="text/javascript">imobile_tag_ver = "0.2";imobile_pid = "23240";');
-      document.write('imobile_asid = "151832";imobile_type = "overlay";</scr'+'ipt>');
-      document.write('<script type="text/javascript" src="http://spad.i-mobile.co.jp/sc'+'ript/adssp.js?20110215"></scr'+'ipt>');
+      ////
+      ////alert('i-mobile');
+      //document.write('<script type="text/javascript">imobile_tag_ver = "0.2";imobile_pid = "23240";');
+      //document.write('imobile_asid = "151832";imobile_type = "overlay";</scr'+'ipt>');
+      //document.write('<script type="text/javascript" src="http://spad.i-mobile.co.jp/sc'+'ript/adssp.js?20110215"></scr'+'ipt>');
+
+      //alert('amoad');
+      document.write('<script src="http://j.amoad.com/js/aa.js" type="text/javascript" charset="utf-8"></scr'+'ipt>');
+      document.write('<div class="ad_frame sid_62056d310111552c380f2be3eec71f4a095f47649119bfc56a6fa1a0e7f34233 container_div sp fit"></div>');
   }
 }
 </script>
