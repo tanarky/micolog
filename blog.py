@@ -4,6 +4,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from google.appengine.dist import use_library
 use_library('django', '1.2')
 import wsgiref.handlers
+#from webapp2_extras import json
+from django.utils import simplejson as json
 
 # Google App Engine imports.
 ##import app.webapp as webapp2
@@ -42,22 +44,53 @@ class BasePublicPage(BaseRequestHandler):
 class IdPage(BasePublicPage):
     def get(self):
         try:
+            limit = int(self.param('limit'))
             offset = int(self.param('offset'))
-            if offset < 0:
-                offset = 0
+            if limit < 0 or offset < 0:
+                raise
         except:
+            limit  = 100
             offset = 0
 
-        entries = Entry.all(keys_only=True).filter('entrytype =','post').\
+        entries = Entry.all().filter('entrytype =','post').\
             filter("published =", True).order('-sticky').order('-date').\
-            fetch(1000, offset)
+            fetch(limit, offset)
 
         self.response.headers['Content-type'] = "text/plain; utf-8"
 
         for e in entries:
-            self.response.out.write( e.id() )
+            self.response.out.write( e.post_id )
             self.response.out.write( "\n" )
 
+class PostPage(BasePublicPage):
+    def get(self):
+        try:
+            _id  = int(self.param('id'))
+            entries = Entry.all().filter("published =", True).filter('post_id =', _id).fetch(1)
+            entry   = entries[0]
+
+            self.response.headers['Content-type'] = "application/json; utf-8"
+            ret = {
+                'title': entry.title,
+                'content': entry.content,
+                'date': entry.date.strftime('%Y-%m-%d %H:%M:%S'),
+                'tags': [],
+                'categories': [],
+                }
+
+            if entry.categories:
+                for c in entry.categories:
+                    ret['categories'].append(c.slug)
+
+            if entry.strtags:
+                for t in entry.tags:
+                    ret['tags'].append(t)
+
+            self.response.out.write(json.dumps(ret))
+
+        except:
+            logging.error(traceback.format_exc())
+            self.response.out.write('{"err":1}')
 
 class MainPage(BasePublicPage):
     def head(self,page=1):
@@ -670,6 +703,7 @@ def main():
             ('/(\d{4})/(\d{2})',         archiveByMonth),
             ('/',                        MainPage),
             ('/id',                      IdPage),
+            ('/post',                    PostPage),
             ('/checkimg/',               CheckImg),
             ('/skin',                    ChangeTheme),
             ('/feed',                    FeedHandler),
