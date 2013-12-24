@@ -39,6 +39,26 @@ class BasePublicPage(BaseRequestHandler):
             memcache.set('sidebar', sidebar, 60*60*24)
         return sidebar
 
+class IdPage(BasePublicPage):
+    def get(self):
+        try:
+            offset = int(self.param('offset'))
+            if offset < 0:
+                offset = 0
+        except:
+            offset = 0
+
+        entries = Entry.all(keys_only=True).filter('entrytype =','post').\
+            filter("published =", True).order('-sticky').order('-date').\
+            fetch(1000, offset)
+
+        self.response.headers['Content-type'] = "text/plain; utf-8"
+
+        for e in entries:
+            self.response.out.write( e.id() )
+            self.response.out.write( "\n" )
+
+
 class MainPage(BasePublicPage):
     def head(self,page=1):
         if g_blog.allow_pingback :
@@ -649,6 +669,7 @@ def main():
             ('/category/(.*)',           entriesByCategory),
             ('/(\d{4})/(\d{2})',         archiveByMonth),
             ('/',                        MainPage),
+            ('/id',                      IdPage),
             ('/checkimg/',               CheckImg),
             ('/skin',                    ChangeTheme),
             ('/feed',                    FeedHandler),
@@ -673,4 +694,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
