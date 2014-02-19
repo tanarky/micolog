@@ -8,9 +8,12 @@
     <meta lang="ja" content="{% block keywords %}{% endblock %}みかん,ブログ,食べログ,ブログ村" name="keywords">
     <meta lang="ja" content="六本木・赤坂・麻布十番・西麻布のお得＆美食ランチ情報満載！" name="Description">
 
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<!--
     <link href="/static/bootstrap/css/bootstrap.org.min.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="/static/styles/front.css" rel="stylesheet">
+-->
+    <link href="/static/styles/front2.css?v=1.2" rel="stylesheet">
     <link rel="alternate" type="application/rss+xml" title="{{ blog.title }} RSS Feed" href="{{ blog.feedurl }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link href="/static/wlwmanifest.xml" type="application/wlwmanifest+xml" rel="wlwmanifest"/>
@@ -26,7 +29,7 @@ div.container {
   <body>
     <div class="container">
       <div class="row">
-        <div class="span12">
+        <div class="col-sm-12">
           <div class="mycontainer">
             <div id="myhero">
               <p class="mytitle"><a href="/">{{ blog.title }}</a></p>
@@ -37,13 +40,13 @@ div.container {
       </div>
 
       <div class="row">
-        <div class="span8">
+        <div class="col-sm-8 col-sm-push-4">
           <div class="mycontainer">
           {%block content %}{%endblock%}
           </div>
         </div>
 
-        <div class="span4">
+        <div class="col-sm-4 col-sm-pull-8">
           <div id="sidebar" class="mycontainer">
             {{ sidebar|safe }}
           </div>
@@ -52,10 +55,9 @@ div.container {
 
     </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>-->
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
-<!--<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>-->
 <script>
+/*
 commentuser=$.cookie('comment_user');
 if (commentuser)
 {
@@ -98,14 +100,23 @@ $('#commentform').submit(function(){
 
     return true;
 });
-
+*/
 function dbg(msg){
     $("#dbg").text($("#dbg").text() + msg);
 }
 
 /* image resizing */
 if(navigator.userAgent.match(/iPhone/) || navigator.userAgent.match(/iPod/) || navigator.userAgent.match(/Android/)){
-    $("img").removeAttr("width").removeAttr("height").addClass('img-rounded');
+    var imgs = $("img");
+    for (var i = 0; i < imgs.length; i++) {
+        var w = imgs[i].getAttribute('width');
+        if( 300 < parseInt(w)){
+            imgs[i].removeAttribute("width");
+            imgs[i].removeAttribute("height");
+            imgs[i].setAttribute('width','300');
+            imgs[i].className = 'img-rounded';
+        }
+    }
 }
 /* fixed sidebar */
 else {
