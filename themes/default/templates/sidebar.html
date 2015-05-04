@@ -13,10 +13,9 @@ imobile_height = 250;
 
     <h3 class="nav-title">カテゴリ</h3>
     <div style="line-height:20px">
-      {% recurse cat in categories children="children" indent=(5,20) %}
-      <p style="margin:0 0 5px {{indent}}px"><a href="/category/{{cat.slug|urlencode}}">{{cat.name}}({{cat.count}})</a></p>
-      {% yield %}
-      {% endrecurse %}
+      {% for cat in categories %}
+      <p style="margin:0 0 5px 0px"><a href="/category/{{cat.slug|urlencode}}">{{cat.name}}({{cat.count}})</a></p>
+      {% endfor %}
     </div>
   </li>
   <li>

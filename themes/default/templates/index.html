@@ -16,17 +16,6 @@
 <div class="entry-body">
   {{ entry.content|safe }}
 
-  {%mf after_entry_content%}
-    {%if relateposts%}
-    <br/><br/>
-    <h4 class="nav-title">関連記事:</h4>
-    <ul>
-      {%for post in relateposts%}
-      <li><a href="/{{post.link}}">{{post.title}}</a></li>
-      {%endfor%}
-    </ul>
-    {% endif %}
-  {% endmf %}
 </div>
 <br/><br/>
 <div class="meta">

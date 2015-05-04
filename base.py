@@ -190,13 +190,16 @@ class util:
 
 class Pager(object):
 
-    def __init__(self, model=None,query=None, items_per_page=10):
-        if model:
-            self.query = model.all()
-        else:
-            self.query=query
-
-        self.items_per_page = items_per_page
+    #def __init__(self, model=None,query=None, items_per_page=10):
+    def __init__():
+        pass
+        #self, model=None,query=None, items_per_page=10):
+        #if model:
+        #    self.query = model.all()
+        #else:
+        #    self.query=query
+        #
+        #self.items_per_page = items_per_page
 
     def fetch(self, p):
         if hasattr(self.query,'__len__'):

@@ -42,18 +42,6 @@ class setlanguage(base.BaseRequestHandler):
             g_blog.save()
         self.redirect(next)
 
-##			if hasattr(request, 'session'):
-##				request.session['django_language'] = lang_code
-##			else:
-
-##			cookiestr='django_language=%s;expires=%s;domain=%s;path=/'%( lang_code,
-##					   (datetime.now()+timedelta(days=100)).strftime("%a, %d-%b-%Y %H:%M:%S GMT"),
-##					   ''
-##					   )
-##			self.write(cookiestr)
-
-##          self.response.headers.add_header('Set-Cookie', cookiestr)
-
 def fetch_result(target_uri):
     for RETRY in range(5):
         try:
@@ -382,8 +370,8 @@ class admin_setup(base.BaseRequestHandler):
         self.render2('views/admin/setup.html',vals)
 
 class admin_entry(base.BaseRequestHandler):
-    def __init__(self):
-        base.BaseRequestHandler.__init__(self)
+    def __init__():
+        #base.BaseRequestHandler.__init__(self)
         self.current='write'
 
     @base.requires_admin
