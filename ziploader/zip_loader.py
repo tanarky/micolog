@@ -1,8 +1,5 @@
 # Wrapper for loading templates from zipfile.
 import zipfile,logging,os
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 from django.template import TemplateDoesNotExist
 from django.conf import settings
 logging.debug("zipload imported")

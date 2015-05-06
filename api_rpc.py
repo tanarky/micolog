@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import cgi,os,sys
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 import wsgiref.handlers
 import xmlrpclib
 from xmlrpclib import Fault

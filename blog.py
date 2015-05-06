@@ -1,19 +1,16 @@
 # coding: utf-8
 import cgi, os
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 import wsgiref.handlers
 import webapp2
 from webapp2_extras import json
 from datetime import timedelta
 import random
-from django.utils import simplejson
 import app.filter as myfilter
 from app.safecode import Image
 from app.gmemsess import Session
 from base import *
 from model import *
+from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
 from google.appengine.api import memcache
@@ -705,4 +702,4 @@ class CheckImg(BaseRequestHandler):
 #    g_blog.plugins.register_handlerlist(application)
 #    wsgiref.handlers.CGIHandler().run(application)
 
-app = webapp2.WSGIApplication([('/', MainPage)])
+application = webapp2.WSGIApplication([('/', MainPage)])

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import os,logging
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 from google.appengine.ext import db
 from google.appengine.ext.db import Model as DBModel
 from google.appengine.api import memcache

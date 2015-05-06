@@ -1,15 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-# Copyright(C) 2008 SupDo.com
-# Licensed under the GUN License, Version 3.0 (the "License");
-#
-# File:        safecode.py
-# Author:      KuKei
-# Create Date: 2008-07-16
-# Description: 负责验证码生成。
-# Modify Date: 2008-08-06
-
+# coding: utf-8
 import hashlib
 import random
 from pngcanvas import PNGCanvas

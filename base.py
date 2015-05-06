@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 import os,logging
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 import functools
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import memcache
-##import app.webapp as webapp2
 from django.template import TemplateDoesNotExist
 from django.conf import settings
 settings._target = None
-#from model import g_blog,User
-#activate(g_blog.language)
 from google.appengine.api import taskqueue
 from mimetypes import types_map
 from datetime import datetime
